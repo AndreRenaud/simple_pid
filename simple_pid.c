@@ -83,9 +83,9 @@ float pid_update(simple_pid_t *pid, const float setpoint,
     output = clamp(p_out + i_out + d_out, pid->min, pid->max);
 
     if (pid->csv_output)
-        fprintf(pid->csv_output, "%d, %f, %f, %f, %f, %f, %f, %f, %f\n",
-                timestamp, setpoint, process_value, p_out, i_out, d_out,
-                output, pid->integral, pid->last_error);
+        fprintf(pid->csv_output, "%d,%f,%f,%f,%f,%f,%f,%f,%f\n", timestamp,
+                setpoint, process_value, p_out, i_out, d_out, output,
+                pid->integral, pid->last_error);
 
     pdebug("pid_update %s: p_out=%f i_out=%f d_out=%f output=%f\n", pid->name,
            p_out, i_out, d_out, output);
@@ -98,5 +98,8 @@ int pid_set_csv(simple_pid_t *pid, FILE *output)
     if (!pid)
         return -1;
     pid->csv_output = output;
+    if (pid->csv_output)
+        fprintf(pid->csv_output, "timestamp,setpoint,processvalue,p_out,i_"
+                                 "out,d_out,output,integral,error\n");
     return 0;
 }
