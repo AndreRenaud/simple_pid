@@ -23,7 +23,7 @@ static void simple_test(void)
     for (int i = 0; i < 1000 && !good; i++) {
         output = pid_update(&pid, setpoint, output, i);
         // Check we're in range
-        good = float_close(output, setpoint, 0.1);
+        good = float_close(output, setpoint, 0.2);
     }
     TEST_ASSERT_(good, "Output never stabilised to %f, reached %f", setpoint,
                  output);
@@ -51,7 +51,7 @@ static void random_test(void)
 
         for (i = 0; i < 10000000 && !good; i++) {
             output = pid_update(&pid, setpoint, output, i);
-            good = float_close(output, setpoint, 0.1);
+            good = float_close(output, setpoint, 0.2);
         }
         TEST_CHECK_(good,
                     "%d: Output never stabilised to %f, reached %f. "
@@ -84,7 +84,7 @@ static void cruise_control_test(void)
 
         for (int i = 0; i < 10000 && !good; i++) {
             float dt = 0.01;
-            float accel_change = pid_update(&pid, target, speed, dt * i);
+            float accel_change = pid_update(&pid, target, speed, i);
             acceleration += accel_change / 100;
             if (acceleration > 10)
                 acceleration = 10;
@@ -93,7 +93,7 @@ static void cruise_control_test(void)
             speed = calculate_car_pos(speed, acceleration, dt);
             // printf("Iteration %d, acceleration %f, speed %f, target %f\n",
             // i, acceleration, speed, target);
-            good = float_close(speed, target, 0.1);
+            good = float_close(speed, target, 0.2);
         }
         TEST_CHECK_(good,
                     "%d: Output never stabilised to %f, reached %f. "
