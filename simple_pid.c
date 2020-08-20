@@ -20,7 +20,7 @@ static void pdebug(const char *fmt, ...)
 }
 
 int pid_init(simple_pid_t *pid, const char *name, float min, float max,
-             float kp, float kd, float ki, uint32_t start_time)
+             float kp, float ki, float kd, uint32_t start_time)
 {
     memset(pid, 0, sizeof(*pid));
     if (min > max)
@@ -95,6 +95,8 @@ float pid_update(simple_pid_t *pid, const float setpoint,
 
 int pid_set_csv(simple_pid_t *pid, FILE *output)
 {
+    if (!pid)
+        return -1;
     pid->csv_output = output;
     return 0;
 }
